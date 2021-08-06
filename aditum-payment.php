@@ -77,6 +77,10 @@ function aditum_enqueue_dependencies() {
 	wp_enqueue_style( 'aditum-style', plugins_url() . '/aditum-payment-gateway/assets/css/style.css', [], time() );
 	wp_enqueue_script( 'jquerymask', plugins_url() . '/aditum-payment-gateway/assets/js/jquery.mask.js', array( 'jquery' ), time(), false );
 	wp_enqueue_script( 'main-scripts', plugins_url() . '/aditum-payment-gateway/assets/js/app.js', array(), time(), false );
+	wp_add_inline_script( 'main-scripts', "window.antifraude_id = '".get_option('aditum_antifraude_id')."'" );
+	wp_add_inline_script( 'main-scripts', "window.antifraude_type = '".get_option('aditum_antifraude_type')."'" );
+	wp_enqueue_script( 'antifraude', plugins_url() . '/aditum-payment-gateway/assets/js/antifraud.js', array('main-scripts'), time(), false );
+	
 }
 
 
@@ -402,4 +406,46 @@ add_option( 'woocommerce_pay_page_id', get_option( 'woocommerce_thanks_page_id' 
 
 add_action( 'woocommerce_after_order_notes', function(){
 	echo '<input type="hidden" class="input-hidden" name="antifraud_token" id="antifraud_token" />';
+} );
+
+add_filter( 'woocommerce_settings_tabs_array', function($settings_tabs){
+	$settings_tabs['settings_tab_aditum_antifraude'] = __( 'Antifraude', 'woocommerce-settings-tab-aditum-antifraude' );
+    return $settings_tabs;
+}, 50 );
+
+function get_aditum_antifraude_settings() {
+	$settings = array(
+        'section_title' => array(
+            'name'     => __( 'Antifraude', 'woocommerce-settings-tab-aditum-antifraude' ),
+            'type'     => 'title',
+            'desc'     => '',
+            'id'       => 'wc_settings_tab_aditum_antifraude_section_title'
+        ),
+		'aditum_antifraude_type' => array(
+			'title'   => __( 'Tipo de Antifraude:', 'wc-aditum' ),
+			'type'    => 'select',
+			'options' => ['konduto' => 'Konduto', 'clearsale' => 'Clear Sale'],
+			'id'   => 'aditum_antifraude_type'
+		),
+		'aditum_antifraude_id'   => array(
+			'title'       => __( 'Token:', 'wc-aditum' ),
+			'type'        => 'text',
+			'description' => __( 'Token.', 'wc-aditum' ),
+			'desc_tip'    => true,
+			'id'   => 'aditum_antifraude_id'
+		),
+        'section_end' => array(
+             'type' => 'sectionend',
+             'id' => 'wc_settings_settings_tab_aditum_antifraude_section_end'
+        )
+	);
+	return apply_filters( 'wc_settings_settings_tab_aditum_antifraude_settings', $settings );
+}
+
+add_action( 'woocommerce_settings_tabs_settings_tab_aditum_antifraude', function(){
+	woocommerce_admin_fields(get_aditum_antifraude_settings());
+});
+
+add_action( 'woocommerce_update_options_settings_tab_aditum_antifraude', function () {
+    woocommerce_update_options( get_aditum_antifraude_settings() );
 } );

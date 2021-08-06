@@ -257,102 +257,11 @@ class WC_Aditum_Boleto_Pay_Gateway extends WC_Payment_Gateway {
 					'type'    => 'select',
 					'options' => $inputs_address,
 				),
-				'aditum_antifraude_type'        => array(
-					'title'   => __( 'Tipo de Antifraude:', 'wc-aditum-boleto' ),
-					'type'    => 'select',
-					'options' => ['konduto' => 'Konduto', 'clearsale' => 'Clear Sale'],
-				),
-				'aditum_antifraude_id'           => array(
-					'title'       => __( 'Token:', 'wc-aditum-boleto' ),
-					'type'        => 'text',
-					'description' => __( 'Token.', 'wc-aditum-boleto' ),
-					'desc_tip'    => true,
-				),
 
 			)
 		);
 
-		if($this->get_option('aditum_antifraude_type') == 'konduto') {
-			$this->load_konduto();
-		}
-
-		if($this->get_option('aditum_antifraude_type') == 'clearsale') {
-			$this->load_clearsale();
-		}
 	}
-
-	function load_clearsale() {
-		add_action('wp_enqueue_scripts', function(){
-			wp_enqueue_script( 'clearsale', '//device.clearsale.com.br/p/fp.js?now=' . time(), array(), time(), false );
-		});
-		$current_user = wp_get_current_user();
-		$usermail= $current_user->user_email; ?>
-		<script type="text/javascript">
-			var __kdt = __kdt || [];
-			__kdt.push({"public_key": "<?php echo esc_attr( $this->get_option('aditum_antifraude_id') ); ?>"});
-			window.addEventListener('load', function(){
-				var period = 300;
-                var limit = 20 * 1e3;
-                let nTry = 0;
-                var intervalID = setInterval(() => {
-                    var csdpObj = (window).csdp;
-                    var csdmObj = (window).csdm;
-
-                    let clear = limit / period <= ++nTry;
-                    if (
-                        typeof csdpObj !== "undefined" &&
-                        typeof csdmObj !== "undefined" &&
-                        typeof publicKey !== "undefined"
-                    ) {
-                        (window).csdp("app", publicKey);
-                        (window).csdp("outputsessionid", "antifraud_token");
-                        (window).csdm('app', publicKey);
-                        (window).csdm('mode', 'manual');
-                        (window).csdm("send", "checkout");
-                        // console.log('clearsaleSessionId');
-                        // var visitorID = document.getElementById('clearsaleSessionId').getAttribute('value');
-                        // console.log(visitorID);
-                        // document.getElementById('antifraud_token').innerHTML = visitorID;
-                        clear = true;
-                    }
-                    if (clear) {
-                        clearInterval(intervalID);
-                    }
-                }, period);
-			})
-		</script> 
-	<?php }
-
-	function load_konduto() {
-		add_action('wp_enqueue_scripts', function(){
-			wp_enqueue_script( 'konduto', 'https://i.k-analytix.com/k.js', array(), time(), false );
-		});
-		$current_user = wp_get_current_user();
-		$usermail= $current_user->user_email; ?>
-		<script type="text/javascript">
-			var __kdt = __kdt || [];
-			__kdt.push({"public_key": "<?php echo esc_attr( $this->get_option('aditum_antifraude_id') ); ?>"});
-			window.addEventListener('load', function(){
-				var visitorID; 
-				(function() {     
-					var period = 300;     
-					var limit = 20 * 1e3;     
-					var nTry = 0;     
-					var intervalID = setInterval(function() {         
-						var clear = limit/period <= ++nTry;         
-						if ((typeof(Konduto) !== "undefined") && (typeof(Konduto.getVisitorID) !== "undefined")) {             
-							visitorID = window.Konduto.getVisitorID();             
-							document.getElementById('antifraud_token').setAttribute('value', visitorID);
-							clear = true;    
-						}         
-						if (clear) {
-							clearInterval(intervalID); 
-						}     
-					}, period);
-				})(visitorID);
-			})
-		</script> 
-	<?php }
 	
 	/**
 	 * Logging method.

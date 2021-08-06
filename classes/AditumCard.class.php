@@ -114,91 +114,7 @@ class WC_Aditum_Card_Pay_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_thank_you_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
-
-		if($this->get_option('aditum_antifraude_type') == 'konduto') {
-			$this->load_konduto();
-		}
-
-		if($this->get_option('aditum_antifraude_type') == 'clearsale') {
-			$this->load_clearsale();
-		}
-	}
-
-	function load_clearsale() {
-
-	}
-
-	function load_konduto() {
-		$current_user = wp_get_current_user();
-		$usermail= $current_user->user_email; ?>
-			<script type="text/javascript">
-				var __kdt = __kdt || [];
-			__kdt.push({"public_key": "<?php echo esc_attr( $this->get_option('aditum_antifraude_id') ); ?>"});
-				(function() {
-					var kdt = document.createElement('script');
-					kdt.id = 'kdtjs'; kdt.type = 'text/javascript';
-					kdt.async = true;    kdt.src = 'https://i.k-analytix.com/k.js';
-					var s = document.getElementsByTagName('body')[0];
-					s.parentNode.insertBefore(kdt, s);
-				})();
-			</script>
-		<?php if (empty($usermail)){ ?>
-			<script type="text/javascript">
-				var visitorID;
-				(function() {
-					var period = 300;
-					var limit = 20 * 1e3;
-					var nTry = 0;
-					var intervalID = setInterval(function() {
-						var clear = limit/period <= ++nTry;
-						if ((typeof(Konduto) !== "undefined") &&
-								(typeof(Konduto.getVisitorID) !== "undefined")) {
-							visitorID = window.Konduto.getVisitorID();
-							clear = true;
-						}
-						if (clear) {
-							clearInterval(intervalID);
-						}
-					}, period);
-				})(visitorID);
-			</script>
-		<?php }	else { ?>
-		<script type="text/javascript">
-			var customerID = "<?php echo($usermail); ?>";
-			(function() {
-				var period = 300;
-				var limit = 20 * 1e3;
-				var nTry = 0;
-				var intervalID = setInterval(function() {
-					var clear = limit/period <= ++nTry;
-					if ((typeof(Konduto) !== "undefined") && (typeof(Konduto.setCustomerID) !== "undefined")) {
-						window.Konduto.setCustomerID(customerID);
-						clear = true;
-					}
-					if (clear) {
-						clearInterval(intervalID);
-					}
-				}, period);
-			})(customerID);
-		</script>
-		<?php }
-	}
-	
-	function konduto_meta_tags() {
-		//Página de Esqueci minha senha
-		if (is_wc_endpoint_url( 'lost-password' )) {
-			echo '<meta name="kdt:page" content="password-reset">';
-		}
-		//Processo de checkout
-		if (is_checkout()) {
-			echo '<meta name="kdt:page" content="checkout">';
-		}
-		//Detalhe de produto
-		if (is_product()) {
-			$nome = get_the_title();
-			echo '<meta name="kdt:page" content="product">';
-			echo '<meta name="kdt:product" content="name='.$nome.'">';
-		}
+		
 	}
 
 	/**
@@ -401,7 +317,7 @@ class WC_Aditum_Card_Pay_Gateway extends WC_Payment_Gateway {
 		$amount                   = str_replace( '.', '', $order->get_total() );
 
 		$authorization->setMerchantChargeId($order_id);
-        $boleto->setSessionId($_POST['antifraud_token']);
+        $authorization->setSessionId($_POST['antifraud_token']);
 
 		// ! Customer
 		$authorization->customer->setName( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
