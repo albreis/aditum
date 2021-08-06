@@ -107,6 +107,7 @@ class WC_Aditum_Card_Pay_Gateway extends WC_Payment_Gateway {
 		$this->expiry_date = $this->get_option( 'aditum_card_order_expiry' );
 
 		$this->max_installments = $this->get_option( 'aditum_card_max_installments' );
+		$this->min_installments_amount = $this->get_option( 'aditum_card_min_installment_amount' );
 
 		$this->init_form_fields();
 		$this->init_settings();
@@ -164,6 +165,13 @@ class WC_Aditum_Card_Pay_Gateway extends WC_Payment_Gateway {
 					'description' => __( 'As instruções iram aparecer na página de Obrigado & Email após o pedido ser feito.', 'wc-aditum_card' ),
 					'desc_tip'    => true,
 				),
+				'aditum_card_min_installment_amount' => array(
+					'title'       => __( 'Valor mínimo da parcela:', 'wc-aditum_card' ),
+					'type'        => 'text',
+					'description' => __( 'Valor mínimo da parcela.', 'wc-aditum_card' ),
+					'default'     => __( '5', 'wc-aditum_card' ),
+					'desc_tip'    => true,
+				),
 				'aditum_card_max_installments' => array(
 					'title'       => __( 'Número máximo de parcelas:', 'wc-aditum_card' ),
 					'type'        => 'text',
@@ -216,18 +224,7 @@ class WC_Aditum_Card_Pay_Gateway extends WC_Payment_Gateway {
 					'title'   => __( 'Definições do Endereço - Bairro:', 'wc-aditum_card' ),
 					'type'    => 'select',
 					'options' => $inputs_address,
-				),
-				'aditum_antifraude_type'        => array(
-					'title'   => __( 'Tipo de Antifraude:', 'wc-aditum_card' ),
-					'type'    => 'select',
-					'options' => ['konduto' => 'Konduto', 'clearsale' => 'Clear Sale'],
-				),
-				'aditum_antifraude_id'           => array(
-					'title'       => __( 'Token:', 'wc-aditum_card' ),
-					'type'        => 'text',
-					'description' => __( 'Token.', 'wc-aditum_card' ),
-					'desc_tip'    => true,
-				),
+				)
 			
 			)
 		);

@@ -228,6 +228,9 @@ function gateway_aditum_card_custom_fields( $description, $payment_id ) {
 		for($i = 1; $i <= $installment_count;$i++){
 			$installment_total = $total/$i;
 			$installment_plural = ($i > 1 ? 'Parcelas' : 'Parcela');
+			if($installment_total < $card->min_installments_amount) {
+				continue;
+			}
 			$installment_options[$i] = $i.' '.$installment_plural.' de R$'.number_format($installment_total, 2, ',', '.');
 		}
 		
