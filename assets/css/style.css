@@ -20,6 +20,10 @@
 }
 #aditum_card_number {
     padding-left: 55px;
+    background-image: url('../bandeiras/credit-card.svg')!important;
+    background-repeat: no-repeat!important;
+    background-position: 10px center!important;
+    background-size: 36px auto!important;
 }
 #card-brand img {
     float: left!important;
