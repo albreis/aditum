@@ -32,6 +32,7 @@ function loadKonduto() {
         })();
         return;
     } catch (error) {
+        console.log(error)
         return;
     }
 }
@@ -80,16 +81,22 @@ if (getAntiFraudType()=='konduto') {
         window.__kdt = window.__kdt || [];
         // @ts-ignore
         window.__kdt.push({public_key: pk});
-        (() => {
-            console.log('linha 14');
-            const kdt = document.createElement("script");
-            kdt.id = "kdtjs";
-            kdt.type = "text/javascript";
-            kdt.async = true;
-            kdt.src = "https://i.k-analytix.com/k.js";
-            const s = document.getElementsByTagName("body")[0];
-            (s.parentNode).insertBefore(kdt, s);
-        })();
+        ((a, b, c, d, e, f, g) => {
+            a['KdtObject'] = e;
+            a[e] = a[e] || function () {
+                (a[e].q = a[e].q || []).push(arguments)
+            }
+            // @ts-ignore
+            a[e].l = 1 * new Date();
+            f = b.createElement(c),
+                g = b.getElementsByTagName(c)[0];
+            // @ts-ignore
+            f.src = d;
+            // @ts-ignore
+            f.async = true;
+            // @ts-ignore
+            g.parentNode.insertBefore(f, g)
+        })(window, document, 'script', 'https://i.k-analytix.com/k.js?now=' + Date.now(), 'csdp');
         loadKonduto();
     } catch (error) {
     }
