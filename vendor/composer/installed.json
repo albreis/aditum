@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "aditum-payments/aditum-api-sdk-php",
-            "version": "v2.7.6",
-            "version_normalized": "2.7.6.0",
+            "version": "v2.8.0",
+            "version_normalized": "2.8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aditum-payments/aditum-api-sdk-php.git",
-                "reference": "9d683179e44eadbc4effead33e5ac44d6dcd4594"
+                "reference": "a54d796965a9c3da43413afe6e68850998ec4a4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aditum-payments/aditum-api-sdk-php/zipball/9d683179e44eadbc4effead33e5ac44d6dcd4594",
-                "reference": "9d683179e44eadbc4effead33e5ac44d6dcd4594",
+                "url": "https://api.github.com/repos/aditum-payments/aditum-api-sdk-php/zipball/a54d796965a9c3da43413afe6e68850998ec4a4e",
+                "reference": "a54d796965a9c3da43413afe6e68850998ec4a4e",
                 "shasum": ""
             },
             "require": {
@@ -24,7 +24,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
             },
-            "time": "2021-06-15T15:50:59+00:00",
+            "time": "2021-08-06T17:55:15+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -52,7 +52,7 @@
             ],
             "support": {
                 "issues": "https://github.com/aditum-payments/aditum-api-sdk-php/issues",
-                "source": "https://github.com/aditum-payments/aditum-api-sdk-php/tree/v2.7.6"
+                "source": "https://github.com/aditum-payments/aditum-api-sdk-php/tree/v2.8.0"
             },
             "install-path": "../aditum-payments/aditum-api-sdk-php"
         },

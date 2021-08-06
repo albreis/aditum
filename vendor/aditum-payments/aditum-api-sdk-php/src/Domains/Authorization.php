@@ -57,9 +57,9 @@ class Authorization extends Charge {
                             )
                         ),
                         "installmentNumber" => $this->transactions->getInstallmentNumber(),
-                        "installmentType" => "Issuer",
                         "paymentType" => $this->transactions->getPaymentType(),
-                        "amount" => $this->transactions->getAmount()
+                        "amount" => $this->transactions->getAmount(),
+                        "installmentType" => $this->transactions->getInstallmentType()
                     ),
                 ],
                 "source" => 1,
